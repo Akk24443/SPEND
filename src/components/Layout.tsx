@@ -64,10 +64,10 @@ export default function Layout({ children, activeTab, setActiveTab, onAddExpense
   ];
 
   return (
-    <div className="flex h-screen bg-slate-50 overflow-hidden dark:bg-slate-950 relative">
-      <div className="absolute inset-0 bg-gradient-soft pointer-events-none opacity-50" />
+    <div className="flex h-screen bg-slate-50/50 overflow-hidden dark:bg-slate-950/50 relative">
+      <div className="absolute inset-0 bg-gradient-soft pointer-events-none opacity-80 dark:opacity-30" />
       {/* Desktop Sidebar */}
-      <aside className="hidden md:flex flex-col w-64 bg-white border-r border-slate-200 dark:bg-slate-900 dark:border-slate-800">
+      <aside className="hidden md:flex flex-col w-64 bg-white/70 backdrop-blur-xl border-r border-slate-200/50 dark:bg-slate-900/70 dark:border-slate-800/50">
         <div className="p-6">
           <div className="flex items-center gap-3">
             <Logo size={36} />
@@ -197,7 +197,7 @@ export default function Layout({ children, activeTab, setActiveTab, onAddExpense
       </nav>
 
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden pb-[calc(64px+safe-area-inset-bottom)] md:pb-0">
-        <header className="h-16 flex items-center justify-between px-6 bg-white border-b border-slate-200 dark:bg-slate-900 dark:border-slate-800 shrink-0 pt-[safe-area-inset-top] h-[calc(64px+safe-area-inset-top)]">
+        <header className="h-16 flex items-center justify-between px-6 bg-white/70 backdrop-blur-md border-b border-slate-200/50 dark:bg-slate-900/70 dark:border-slate-800/50 shrink-0 pt-[safe-area-inset-top] h-[calc(64px+safe-area-inset-top)]">
           <div className="flex items-center gap-2">
             <h2 className="text-lg font-semibold dark:text-slate-200 capitalize">{activeTab}</h2>
           </div>

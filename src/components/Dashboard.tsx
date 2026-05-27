@@ -68,8 +68,8 @@ export default function Dashboard() {
       className="space-y-6"
     >
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <motion.div variants={item}>
-          <Card className="border-none shadow-sm bg-white dark:bg-slate-900 overflow-hidden relative">
+        <motion.div variants={item} whileHover={{ y: -4, scale: 1.01, transition: { duration: 0.2 } }}>
+          <Card className="border border-white/20 dark:border-slate-800/50 shadow-lg bg-white/70 dark:bg-slate-900/70 backdrop-blur-md overflow-hidden relative">
              <div className="absolute top-0 right-0 p-4 opacity-10">
                 <Wallet size={48} className="text-indigo-600" />
              </div>
@@ -92,8 +92,8 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <motion.div variants={item}>
-          <Card className="border-none shadow-sm dark:bg-slate-900 h-full">
+        <motion.div variants={item} whileHover={{ y: -2, transition: { duration: 0.2 } }}>
+          <Card className="border border-white/20 dark:border-slate-800/50 shadow-lg bg-white/70 dark:bg-slate-900/70 backdrop-blur-md h-full">
             <CardHeader>
               <CardTitle className="text-lg font-semibold">Spending by Category</CardTitle>
               <CardDescription>Breakdown of expenses across various categories</CardDescription>
@@ -125,8 +125,8 @@ export default function Dashboard() {
           </Card>
         </motion.div>
 
-        <motion.div variants={item}>
-          <Card className="border-none shadow-sm dark:bg-slate-900 h-full">
+        <motion.div variants={item} whileHover={{ y: -2, transition: { duration: 0.2 } }}>
+          <Card className="border border-white/20 dark:border-slate-800/50 shadow-lg bg-white/70 dark:bg-slate-900/70 backdrop-blur-md h-full">
             <CardHeader>
               <CardTitle className="text-lg font-semibold">Expense Density</CardTitle>
               <CardDescription>Distribution of expenses by category</CardDescription>
@@ -154,7 +154,7 @@ export default function Dashboard() {
       </div>
 
       <motion.div variants={item}>
-        <Card className="border-none shadow-sm dark:bg-slate-900">
+        <Card className="border border-white/20 dark:border-slate-800/50 shadow-lg bg-white/70 dark:bg-slate-900/70 backdrop-blur-md">
           <CardHeader>
             <CardTitle className="text-lg font-semibold">Recent Expenses</CardTitle>
           </CardHeader>
