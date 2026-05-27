@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "56c2150a-6287-4a92-b57d-d2fb5e894add"
+      }
+    },
+    "android": {
+      "package": "com.itz_kabra_arnav.spend"
+    }
+  }
+}
