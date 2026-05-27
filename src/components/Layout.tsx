@@ -66,8 +66,12 @@ export default function Layout({ children, activeTab, setActiveTab, onAddExpense
   return (
     <div className="flex h-screen bg-slate-50/50 overflow-hidden dark:bg-slate-950/50 relative">
       <div className="absolute inset-0 bg-gradient-soft pointer-events-none opacity-80 dark:opacity-30" />
+      {/* Floating Glowing Blur Orbs */}
+      <div className="absolute top-[-10%] left-[-10%] w-[45vw] h-[45vw] rounded-full bg-indigo-500/10 blur-[130px] dark:bg-indigo-500/5 animate-float-1 pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-purple-500/10 blur-[150px] dark:bg-purple-500/5 animate-float-2 pointer-events-none" />
+      <div className="absolute top-[30%] right-[15%] w-[30vw] h-[30vw] rounded-full bg-cyan-400/10 blur-[110px] dark:bg-cyan-400/5 animate-float-1 pointer-events-none" />
       {/* Desktop Sidebar */}
-      <aside className="hidden md:flex flex-col w-64 bg-white/70 backdrop-blur-xl border-r border-slate-200/50 dark:bg-slate-900/70 dark:border-slate-800/50">
+      <aside className="hidden md:flex flex-col w-64 bg-white/70 backdrop-blur-xl border-r border-slate-200/50 dark:bg-slate-900/70 dark:border-slate-800/50 z-10">
         <div className="p-6">
           <div className="flex items-center gap-3">
             <Logo size={36} />
@@ -76,20 +80,22 @@ export default function Layout({ children, activeTab, setActiveTab, onAddExpense
           <p className="text-xs text-slate-500 mt-1">Multi-currency Tracker</p>
         </div>
         
-        <nav className="flex-1 px-4 space-y-1">
+        <nav className="flex-1 px-4 space-y-2">
           {menuItems.map((item) => (
-            <button
+            <motion.button
               key={item.id}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               onClick={() => handleTabChange(item.id)}
-              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+              className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium cursor-pointer transition-all glow-border-hover ${
                 activeTab === item.id 
-                  ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-950/30 dark:text-indigo-400' 
-                  : 'text-slate-600 hover:bg-slate-50 dark:text-slate-400 dark:hover:bg-slate-800/50'
+                  ? 'bg-indigo-50/80 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-400 shadow-sm border border-indigo-100/50 dark:border-indigo-900/30' 
+                  : 'text-slate-600 hover:bg-white/40 dark:hover:bg-slate-800/30 text-slate-600 dark:text-slate-400'
               }`}
             >
-              <item.icon size={18} />
-              {item.label}
-            </button>
+              <item.icon size={18} className={`${activeTab === item.id ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-500'}`} />
+              <span>{item.label}</span>
+            </motion.button>
           ))}
         </nav>
 

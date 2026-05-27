@@ -72,6 +72,62 @@
     animation: var(--animate-gradient);
 }
 
+/* Magical Glowing Gradient Border on Hover */
+.glow-border-hover {
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glow-border-hover::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1.5px; /* border thickness */
+    background: linear-gradient(135deg, #4f46e5, #818cf8, #c084fc, #06b6d4);
+    background-size: 300% 300%;
+    animation: gradient 5s ease infinite;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.3s ease, filter 0.3s ease;
+    pointer-events: none;
+}
+
+.glow-border-hover:hover::after {
+    opacity: 1;
+    filter: drop-shadow(0 0 5px rgba(99, 102, 241, 0.7));
+}
+
+.dark .glow-border-hover:hover::after {
+    filter: drop-shadow(0 0 8px rgba(129, 140, 248, 0.8));
+}
+
+/* Background floating animation for blur orbs */
+@keyframes float-slow {
+    0% { transform: translateY(0px) translateX(0px) scale(1); }
+    33% { transform: translateY(-30px) translateX(25px) scale(1.08); }
+    66% { transform: translateY(20px) translateX(-20px) scale(0.92); }
+    100% { transform: translateY(0px) translateX(0px) scale(1); }
+}
+
+@keyframes float-reverse {
+    0% { transform: translateY(0px) translateX(0px) scale(1); }
+    33% { transform: translateY(25px) translateX(-15px) scale(0.92); }
+    66% { transform: translateY(-20px) translateX(25px) scale(1.08); }
+    100% { transform: translateY(0px) translateX(0px) scale(1); }
+}
+
+.animate-float-1 {
+    animation: float-slow 20s ease-in-out infinite;
+}
+
+.animate-float-2 {
+    animation: float-reverse 25s ease-in-out infinite;
+}
+
 :root {
     --background: oklch(1 0 0);
     --foreground: oklch(0.145 0 0);
