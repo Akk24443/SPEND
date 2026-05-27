@@ -1,0 +1,108 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isEmailVerified() {
+      return request.auth.token.email_verified == true;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // User Profile Rules
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow create: if isOwner(userId) 
+        && incoming().uid == userId 
+        && incoming().email == request.auth.token.email
+        && incoming().baseCurrency is string
+        && incoming().createdAt == request.time;
+      allow update: if isOwner(userId)
+        && incoming().uid == userId
+        && incoming().email == existing().email
+        && incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'baseCurrency', 'updatedAt'])
+        && (incoming().get('updatedAt', null) == null || incoming().updatedAt == request.time);
+    }
+
+    // Trips Rules
+    match /trips/{tripId} {
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow get: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() 
+        && incoming().userId == request.auth.uid
+        && incoming().name is string && incoming().name.size() > 0 && incoming().name.size() <= 100
+        && (incoming().get('description', null) == null || incoming().description is string)
+        && (incoming().get('startDate', null) == null || incoming().startDate is timestamp)
+        && (incoming().get('endDate', null) == null || incoming().endDate is timestamp)
+        && incoming().createdAt == request.time;
+      allow update: if isSignedIn() && existing().userId == request.auth.uid
+        && incoming().userId == existing().userId
+        && incoming().diff(existing()).affectedKeys().hasOnly(['name', 'description', 'startDate', 'endDate']);
+      allow delete: if isSignedIn() && existing().userId == request.auth.uid;
+    }
+
+    // Expenses Rules
+    match /expenses/{expenseId} {
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow get: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() 
+        && incoming().userId == request.auth.uid
+        && incoming().title is string && incoming().title.size() > 0 && incoming().title.size() <= 200
+        && incoming().amount is number && incoming().amount >= 0
+        && incoming().currency is string && incoming().currency.size() == 3
+        && (incoming().get('convertedAmount', 0) is number || incoming().get('convertedAmount', 0) == null)
+        && incoming().date is timestamp
+        && incoming().category is string
+        && (incoming().get('tripId', null) == null || (incoming().tripId is string && incoming().tripId.size() <= 128))
+        && (incoming().get('notes', null) == null || (incoming().notes is string && incoming().notes.size() <= 1000))
+        && (incoming().get('exchangeRate', 1) is number || incoming().get('exchangeRate', 1) == null)
+        && (incoming().get('attachments', null) == null || incoming().attachments is list)
+        && incoming().createdAt == request.time;
+      allow update: if isSignedIn() && existing().userId == request.auth.uid
+        && incoming().userId == existing().userId
+        && (incoming().diff(existing()).affectedKeys().hasOnly(['title', 'tripId', 'amount', 'currency', 'convertedAmount', 'exchangeRate', 'date', 'category', 'notes', 'attachments']) || isAdmin());
+      allow delete: if isSignedIn() && existing().userId == request.auth.uid;
+    }
+
+    // Categories Rules
+    match /categories/{categoryId} {
+      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid || resource.data.isDefault == true);
+      allow get: if isSignedIn() && (resource.data.userId == request.auth.uid || resource.data.isDefault == true);
+      allow create: if isSignedIn() 
+        && incoming().userId == request.auth.uid
+        && incoming().name is string && incoming().name.size() > 0 && incoming().name.size() <= 50
+        && (incoming().get('isDefault', false) == false)
+        && incoming().createdAt == request.time;
+      allow update: if isSignedIn() && existing().userId == request.auth.uid
+        && incoming().userId == existing().userId
+        && incoming().diff(existing()).affectedKeys().hasOnly(['name']);
+      allow delete: if isSignedIn() && existing().userId == request.auth.uid && existing().isDefault != true;
+    }
+  }
+}
